@@ -8,7 +8,7 @@ use std::ops::Neg;
 use std::ops::Sub;
 use std::ops::SubAssign;
 
-#[derive(Debug, Clone, Copy, PartialEq)]
+#[derive(Debug, Clone, Copy)]
 pub struct Vector3 {
     pub x: f64,
     pub y: f64,
@@ -16,6 +16,7 @@ pub struct Vector3 {
 }
 
 pub type Point3 = Vector3;
+pub type Color3 = Vector3;
 
 impl Vector3 {
     pub fn new(x: f64, y: f64, z: f64) -> Self {
@@ -28,6 +29,11 @@ impl Vector3 {
 
     pub fn mag(&self) -> f64 {
         (self.x.powf(2.0) + self.y.powf(2.0) + self.z.powf(2.0)).sqrt()
+    }
+
+    pub fn mag_sqrd(&self) -> f64 {
+        let mag = self.mag();
+        mag * mag
     }
 
     pub fn unit(&self) -> Self {
