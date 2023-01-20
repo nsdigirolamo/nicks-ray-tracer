@@ -4,8 +4,8 @@ use crate::sphere::Sphere;
 
 #[derive(Debug, Clone, Copy)]
 pub struct Ray {
-    origin: Point3,
-    direction: Vector3,
+    pub origin: Point3,
+    pub direction: Vector3,
 }
 
 impl Ray {
@@ -16,11 +16,11 @@ impl Ray {
         }
     }
 
-    pub fn get_point(&self, t: f64) -> Point3 {
-        self.origin + (t * self.direction)
+    pub fn get_point(&self, distance: f64) -> Point3 {
+        self.origin + (distance * self.direction)
     }
 
-    pub fn get_intersect(&self, sphere: &Sphere) -> Option<f64> {
+    pub fn get_intersect(&self, sphere: &Sphere, min_dist: f64, max_dist: f64) -> Option<f64> {
         
         let d: Vector3 = self.direction;
         let o: Point3 = self.origin;
@@ -35,9 +35,17 @@ impl Ray {
         let discriminant: f64 = b.powf(2.0) - 4.0 * a * c;
         
         if discriminant < 0.0 {
-            None
-        } else {
-            Some((-b - discriminant.sqrt()) / (2.0 * a))
+            return None;
         }
+            
+        let mut distance = (-b - discriminant.sqrt()) / (2.0 * a);
+        if distance < min_dist || max_dist < distance {
+            distance = (-b + discriminant.sqrt()) / (2.0 * a);
+            if distance < min_dist || max_dist < distance {
+                return None;
+            }
+        }
+
+        Some((-b - discriminant.sqrt()) / (2.0 * a))
     }
 }
