@@ -47,11 +47,15 @@ impl Vector3 {
 
 pub fn rand_vector3() -> Vector3 {
     let mut rng = rand::thread_rng();
-    Vector3::new(
+    
+    let v = Vector3::new(
         rng.gen_range(-1.0..1.0),
         rng.gen_range(-1.0..1.0),
         rng.gen_range(-1.0..1.0)
-    )
+    );
+
+    // Make sure random vector is within unit sphere.
+    if 1.0 <= v.mag() { rand_vector3() } else { v }
 }
 
 impl Add for Vector3 {
