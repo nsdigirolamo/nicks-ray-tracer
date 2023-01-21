@@ -1,3 +1,5 @@
+use rand::prelude::*;
+
 use std::ops::Add;
 use std::ops::AddAssign;
 use std::ops::Div;
@@ -41,6 +43,15 @@ impl Vector3 {
     pub fn dot(&self, rhs: Self) -> f64 {
         (self.x * rhs.x) + (self.y * rhs.y) + (self.z * rhs.z)
     }
+}
+
+pub fn rand_vector3() -> Vector3 {
+    let mut rng = rand::thread_rng();
+    Vector3::new(
+        rng.gen_range(-1.0..1.0),
+        rng.gen_range(-1.0..1.0),
+        rng.gen_range(-1.0..1.0)
+    )
 }
 
 impl Add for Vector3 {
