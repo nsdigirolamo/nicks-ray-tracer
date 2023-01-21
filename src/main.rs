@@ -1,15 +1,52 @@
 mod color;
+mod hit;
 mod ray;
 mod sphere;
 mod vector3;
 
 use crate::color::Color;
-use crate::vector3::Point3;
+use crate::hit::Hit;
 use crate::ray::Ray;
 use crate::sphere::Sphere;
+use crate::vector3::Point3;
+use crate::vector3::Vector3;
+
+fn get_ray_color(ray: Ray, spheres: &Vec<Sphere>) -> Color {
+
+    let min_distance = 0.01;
+    let max_distance = 100.0;
+
+    let mut found_intersect = false;
+    let mut min_intersect_distance = max_distance;
+    let mut hit: Hit = Default::default();
+
+    for sphere in spheres {
+        match ray.get_intersect(&sphere, min_distance, max_distance) {
+            Some(h) => {
+                if h.distance < min_intersect_distance {
+                    min_intersect_distance = h.distance;
+                    found_intersect = true;
+                    hit = h;
+                }
+            },
+            None => (),
+        }
+    }
+
+    if found_intersect {
+        let normal = 0.5 * (Vector3::new(1.0, 1.0, 1.0) + hit.normal); // make sure there's no negative numbers.
+        Color::new(normal.x, normal.y, normal.z)
+    } else {
+        let s = 0.5 * (1.0 + ray.direction.unit().y);
+        let c1 = Color::new(0.5, 0.7, 1.0) * s;
+        let c2 = Color::new(1.0, 1.0, 1.0) * (1.0 - s);
+        c1 + c2
+    }
+}
+    
+    
 
 fn main() {
-
     let image_width = 1920;
     let image_height = 1080;
     let aspect_ratio = image_width as f64 / image_height as f64;
@@ -24,8 +61,10 @@ fn main() {
     bottom_left_corner.y -= view_height / 2.0;
     bottom_left_corner.z -= view_distance;
 
-    let front = Sphere::new(Point3::new(0.0, -51.0, 0.0), 50.0);
-    
+    let front = Sphere::new(Point3::new(0.0, 0.0, -5.0), 1.0);
+    let ground = Sphere::new(Point3::new(0.0, -1001.0, 0.0), 1000.0);
+    let spheres = vec![front, ground];
+
     println!("P3");
     println!("{} {}", image_width, image_height);
     println!("255");
@@ -39,18 +78,7 @@ fn main() {
             direction.y += view_height * h_ratio;
             
             let ray = Ray::new(origin, direction);
-
-            match ray.get_intersect(&front, 0.01, 100.0) {
-                Some(t) => {
-                    println!("{}", Color::new(1.0, 0.0, 0.0));
-                }
-                None => {
-                    let s = 0.5 * (1.0 + ray.direction.unit().y);
-                    let c1 = Color::new(0.5, 0.7, 1.0) * s;
-                    let c2 = Color::new(1.0, 1.0, 1.0) * (1.0 - s);
-                    println!("{}", c1 + c2);
-                },
-            }
+            println!("{}", get_ray_color(ray, &spheres));
         }
     }
     eprintln!();
