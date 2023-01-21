@@ -1,8 +1,9 @@
+use crate::hit::Hit;
 use crate::vector3::Vector3;
 use crate::vector3::Point3;
 use crate::sphere::Sphere;
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Default, Clone, Copy)]
 pub struct Ray {
     pub origin: Point3,
     pub direction: Vector3,
@@ -20,7 +21,7 @@ impl Ray {
         self.origin + (distance * self.direction)
     }
 
-    pub fn get_intersect(&self, sphere: &Sphere, min_dist: f64, max_dist: f64) -> Option<f64> {
+    pub fn get_intersect(&self, sphere: &Sphere, min_dist: f64, max_dist: f64) -> Option<Hit> {
         
         let d: Vector3 = self.direction;
         let o: Point3 = self.origin;
@@ -46,6 +47,8 @@ impl Ray {
             }
         }
 
-        Some((-b - discriminant.sqrt()) / (2.0 * a))
+        let distance = (-b - discriminant.sqrt()) / (2.0 * a);
+        let normal = self.get_point(distance) - sphere.center;
+        Some(Hit::new(*self, *sphere, distance, normal))
     }
 }
