@@ -1,5 +1,6 @@
 use crate::ray::Ray;
 use crate::sphere::Sphere;
+use crate::vector3::rand_vector3;
 use crate::vector3::Vector3;
 
 #[derive(Default, Clone, Copy)]
@@ -18,5 +19,11 @@ impl Hit {
             distance: distance,
             normal: normal.unit(),
         }
+    }
+
+    pub fn scatter(&self) -> Ray {
+        let origin = self.ray.get_point(self.distance);
+        let direction = self.normal + rand_vector3().unit();
+        Ray::new(origin, direction)
     }
 }
