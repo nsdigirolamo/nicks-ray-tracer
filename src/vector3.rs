@@ -8,7 +8,7 @@ use std::ops::Neg;
 use std::ops::Sub;
 use std::ops::SubAssign;
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Default, Clone, Copy)]
 pub struct Vector3 {
     pub x: f64,
     pub y: f64,
