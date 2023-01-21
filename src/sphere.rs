@@ -1,5 +1,6 @@
 use crate::vector3::Point3;
 
+#[derive(Default, Clone, Copy)]
 pub struct Sphere {
     pub center: Point3,
     pub radius: f64,
