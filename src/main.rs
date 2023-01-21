@@ -79,8 +79,8 @@ fn main() {
 
             for _sample in 0..samples_per_pixel {
                 
-                let rand_w: f64 = rng.gen();
-                let rand_h: f64 = rng.gen();
+                let rand_w: f64 = rng.gen_range(-1.0..1.0);
+                let rand_h: f64 = rng.gen_range(-1.0..1.0);
 
                 let w_ratio = (col as f64 + rand_w) / cam.image_width as f64;
                 let h_ratio = (row as f64 + rand_h) / cam.image_height as f64;
