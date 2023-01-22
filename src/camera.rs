@@ -1,40 +1,52 @@
 use crate::ray::Ray;
 use crate::vector3::Point3;
+use crate::vector3::Vector3;
+
+use std::f64::consts::PI;
 
 #[derive(Default, Clone, Copy)]
 pub struct Camera {
-    pub image_width: i32,
-    pub image_height: i32,
-    pub aspect_ratio: f64,
-    pub position: Point3,
-    pub focal_length: f64,
-    pub view_width: f64,
-    pub view_height: f64,
-    pub bottom_left_corner: Point3,
+    origin: Point3,
+    horizontal: Vector3,
+    vertical: Vector3,
+    lower_left_corner: Point3
 }
 
 impl Camera {
-    pub fn new(image_height: i32, aspect_ratio: f64, position: Point3, focal_length: f64, view_height: f64) -> Self {
-        let mut c = Self {
-            image_width: (image_height as f64 * aspect_ratio) as i32,
-            image_height: image_height,
-            aspect_ratio: aspect_ratio,
-            position: position,
-            focal_length: focal_length,
-            view_width: view_height * aspect_ratio,
-            view_height: view_height,
-            bottom_left_corner: position,
-        };
-        c.bottom_left_corner.x -= c.view_width / 2.0;
-        c.bottom_left_corner.y -= c.view_height / 2.0;
-        c.bottom_left_corner.z -= c.focal_length;
-        c
+    pub fn new(
+
+        look_from: Vector3, 
+        look_at: Vector3, 
+        up: Vector3, 
+        vfov_degrees: f64, 
+        aspect_ratio: f64
+
+    ) -> Self {
+
+        let theta = vfov_degrees * (PI / 180.0);
+        let view_height = (theta / 2.0).tan();
+        let view_width = aspect_ratio * view_height;
+
+        let w = (look_from - look_at).unit();
+        let u = up.cross(w).unit();
+        let v = w.cross(u);
+
+        let origin = look_from;
+        let horizontal = view_width * u;
+        let vertical = view_height * v;
+        let lower_left_corner = origin - horizontal/2.0 - vertical/2.0 - w;
+
+        Self {
+            origin: origin,
+            horizontal: horizontal,
+            vertical: vertical,
+            lower_left_corner: lower_left_corner, 
+        }  
     }
 
     pub fn get_ray(&self, width_ratio: f64, height_ratio: f64) -> Ray {
-        let mut direction = self.bottom_left_corner;
-        direction.x += self.view_width * width_ratio;
-        direction.y += self.view_height * height_ratio;
-        Ray::new(self.position, direction)
+        let h_offset = width_ratio * self.horizontal;
+        let v_offset = height_ratio * self.vertical;
+        Ray::new(self.origin, self.lower_left_corner + h_offset + v_offset - self.origin)
     }
 }
