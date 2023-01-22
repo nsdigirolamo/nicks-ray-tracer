@@ -23,32 +23,24 @@ impl Ray {
 
     pub fn get_intersect(&self, sphere: &Sphere, min_dist: f64, max_dist: f64) -> Option<Hit> {
         
-        let d: Vector3 = self.direction;
-        let o: Point3 = self.origin;
-        let c: Point3 = sphere.center;
-        let r: f64 = sphere.radius;
+        let oc = self.origin - sphere.center;
+        let a = self.direction.mag_squared();
+        let half_b = oc.dot(self.direction);
+        let c = oc.mag_squared() - (sphere.radius * sphere.radius);
 
-        // Equation: wikipedia.org/wiki/Line-sphere_intersection
-        let a: f64 = d.dot(d);
-        let b: f64 = 2.0 * (d.dot(o - c));
-        let c: f64 = (o - c).dot(o - c) - r.powf(2.0);
+        let discriminant = half_b * half_b - a * c;
+        if discriminant < 0.0 { return None; }
 
-        let discriminant: f64 = b.powf(2.0) - 4.0 * a * c;
-        
-        if discriminant < 0.0 {
-            return None;
-        }
-            
-        let mut distance = (-b - discriminant.sqrt()) / (2.0 * a);
-        if distance < min_dist || max_dist < distance {
-            distance = (-b + discriminant.sqrt()) / (2.0 * a);
-            if distance < min_dist || max_dist < distance {
+        let sqrtd = discriminant.sqrt();
+
+        let mut root = (-half_b - sqrtd) / a;
+        if root < min_dist || max_dist < root {
+            root = (-half_b + sqrtd) / a;
+            if root < min_dist || max_dist < root {
                 return None;
             }
         }
 
-        let distance = (-b - discriminant.sqrt()) / (2.0 * a);
-        let normal = self.get_point(distance) - sphere.center;
-        Some(Hit::new(*self, *sphere, distance, normal))
+        Some(Hit::new(*self, *sphere, root))
     }
 }
