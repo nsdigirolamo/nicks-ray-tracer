@@ -1,6 +1,7 @@
 mod camera;
 mod color;
 mod hit;
+mod material;
 mod ray;
 mod sphere;
 mod vector3;
@@ -8,6 +9,7 @@ mod vector3;
 use crate::camera::Camera;
 use crate::color::Color;
 use crate::hit::Hit;
+use crate::material::Material;
 use crate::ray::Ray;
 use crate::sphere::Sphere;
 use crate::vector3::Point3;
@@ -43,8 +45,12 @@ fn get_ray_color(ray: Ray, spheres: &Vec<Sphere>, depth: i32) -> Color {
     } else if found_intersect {
 
         let scattered = hit.scatter();
-        get_ray_color(scattered, spheres, depth - 1) * 0.5
-
+        let mut c = get_ray_color(scattered, spheres, depth - 1);
+        c.r *= hit.sphere.material.albedo.r;
+        c.g *= hit.sphere.material.albedo.g;
+        c.b *= hit.sphere.material.albedo.b;
+        c
+        
     } else {
         let s = 0.5 * (1.0 + ray.direction.unit().y);
         let c1 = Color::new(0.5, 0.7, 1.0) * s;
@@ -60,8 +66,11 @@ fn main() {
     let position = Point3::new(0.0, 0.0, 0.0);
     let cam = Camera::new(image_height, aspect_ratio, position, 1.0, 2.0);
 
-    let front = Sphere::new(Point3::new(0.0, 0.0, -1.0), 0.5);
-    let ground = Sphere::new(Point3::new(0.0, -1000.5, -1.0), 1000.0);
+    let lavender_mat = Material::new(Color::new(0.5, 0.3, 0.45));
+    let grey_mat = Material::new(Color::new(0.5, 0.5, 0.5));
+
+    let front = Sphere::new(Point3::new(0.0, 0.0, -1.0), 0.5, lavender_mat);
+    let ground = Sphere::new(Point3::new(0.0, -1000.5, -1.0), 1000.0, grey_mat);
     let spheres = vec![front, ground];
 
     let mut rng = rand::thread_rng();
