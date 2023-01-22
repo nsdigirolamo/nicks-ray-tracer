@@ -18,8 +18,8 @@ use rand::prelude::*;
 
 fn get_ray_color(ray: Ray, spheres: &Vec<Sphere>, depth: i32) -> Color {
 
-    let min_distance = 0.01;
-    let max_distance = 100.0;
+    let min_distance = 0.001;
+    let max_distance = 1000.0;
 
     let mut found_intersect = false;
     let mut min_intersect_distance = max_distance;
@@ -44,13 +44,12 @@ fn get_ray_color(ray: Ray, spheres: &Vec<Sphere>, depth: i32) -> Color {
 
     } else if found_intersect {
 
-        let scattered = hit.scatter();
-        let mut c = get_ray_color(scattered, spheres, depth - 1);
+        let mut c = get_ray_color(hit.scatter(), spheres, depth - 1);
         c.r *= hit.sphere.material.albedo.r;
         c.g *= hit.sphere.material.albedo.g;
         c.b *= hit.sphere.material.albedo.b;
         c
-        
+
     } else {
         let s = 0.5 * (1.0 + ray.direction.unit().y);
         let c1 = Color::new(0.5, 0.7, 1.0) * s;
@@ -66,15 +65,23 @@ fn main() {
     let position = Point3::new(0.0, 0.0, 0.0);
     let cam = Camera::new(image_height, aspect_ratio, position, 1.0, 2.0);
 
-    let lavender_mat = Material::new(Color::new(0.5, 0.3, 0.45));
-    let grey_mat = Material::new(Color::new(0.5, 0.5, 0.5));
+    let ground_mat = Material::new(Color::new(0.8, 0.8, 0.0), None);
+    let ground = Sphere::new(Point3::new(0.0, -100.5, -1.0), 100.0, ground_mat);
 
-    let front = Sphere::new(Point3::new(0.0, 0.0, -1.0), 0.5, lavender_mat);
-    let ground = Sphere::new(Point3::new(0.0, -1000.5, -1.0), 1000.0, grey_mat);
-    let spheres = vec![front, ground];
+    let center_mat = Material::new(Color::new(0.7, 0.3, 0.3), None);
+    let center = Sphere::new(Point3::new(0.0, 0.0, -1.0), 0.5, center_mat);
+
+    let left_mat = Material::new(Color::new(0.8, 0.8, 0.8), Some(0.3));
+    let left = Sphere::new(Point3::new(-1.0, 0.0, -1.0), 0.5, left_mat);
+
+    let right_mat = Material::new(Color::new(0.8, 0.6, 0.2), Some(1.0));
+    let right = Sphere::new(Point3::new(1.0, 0.0, -1.0), 0.5, right_mat);
+    
+    let spheres = vec![ground, center, left, right];
 
     let mut rng = rand::thread_rng();
     let samples_per_pixel = 100;
+    let max_bounce_depth = 100;
 
     println!("P3");
     println!("{} {}", cam.image_width, cam.image_height);
@@ -90,15 +97,11 @@ fn main() {
                 
                 let rand_w: f64 = rng.gen_range(-1.0..1.0);
                 let rand_h: f64 = rng.gen_range(-1.0..1.0);
-
-                let w_ratio = (col as f64 + rand_w) / cam.image_width as f64;
-                let h_ratio = (row as f64 + rand_h) / cam.image_height as f64;
-                let mut direction = cam.bottom_left_corner;
-                direction.x += cam.view_width * w_ratio;
-                direction.y += cam.view_height * h_ratio;
+                let w = (col as f64 + rand_w) / cam.image_width as f64;
+                let h = (row as f64 + rand_h) / cam.image_height as f64;
                 
-                let ray = Ray::new(cam.position, direction);
-                pixel_color += get_ray_color(ray, &spheres, 100);
+                let ray = cam.get_ray(w, h);
+                pixel_color += get_ray_color(ray, &spheres, max_bounce_depth);
             }
 
             pixel_color /= samples_per_pixel as f64;
