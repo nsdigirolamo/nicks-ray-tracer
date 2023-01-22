@@ -22,8 +22,21 @@ impl Hit {
     }
 
     pub fn scatter(&self) -> Ray {
-        let origin = self.ray.get_point(self.distance);
-        let direction = self.normal.unit() + rand_vector3().unit();
-        Ray::new(origin, direction)
+
+        let hit_point = self.ray.get_point(self.distance);
+        let mut direction: Vector3;
+
+        match self.sphere.material.reflectivity {
+            Some(reflectivity) => {
+                direction = self.ray.direction.unit().reflect(self.normal);
+                direction += reflectivity * rand_vector3();
+            },
+            None => {
+                direction = self.normal.unit() + rand_vector3().unit();
+                if direction.near_zero() { direction = self.normal }
+            }
+        }
+
+        Ray::new(hit_point, direction) 
     }
 }
