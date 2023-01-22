@@ -24,8 +24,12 @@ impl Vector3 {
         Self { x: x, y: y, z: z, }
     }
 
+    pub fn mag_squared(&self) -> f64 {
+        (self.x * self.x) + (self.y * self.y) + (self.z * self.z)
+    }
+
     pub fn mag(&self) -> f64 {
-        (self.x.powf(2.0) + self.y.powf(2.0) + self.z.powf(2.0)).sqrt()
+        self.mag_squared().sqrt()
     }
 
     pub fn unit(&self) -> Self {
@@ -52,6 +56,13 @@ impl Vector3 {
     pub fn reflect(&self, normal: Vector3) -> Vector3 {
         let unit_normal = normal.unit();
         *self - 2.0 * self.dot(unit_normal) * unit_normal
+    }
+
+    pub fn refract(&self, normal: Vector3, refraction_index: f64) -> Vector3 {
+        let cos_theta = (-*self).dot(normal).min(1.0);
+        let r_out_perp = refraction_index * (*self + cos_theta * normal);
+        let r_out_parallel = -((1.0 - r_out_perp.mag().powf(2.0)).abs().sqrt()) * normal;
+        r_out_perp + r_out_parallel
     }
 }
 
