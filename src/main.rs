@@ -14,7 +14,7 @@ use crate::ray::Ray;
 use crate::sphere::Sphere;
 use crate::vector3::Point3;
 
-use rand::prelude::*;
+use rand::Rng;
 
 fn get_ray_color(ray: Ray, spheres: &Vec<Sphere>, depth: i32) -> Color {
 
@@ -44,17 +44,20 @@ fn get_ray_color(ray: Ray, spheres: &Vec<Sphere>, depth: i32) -> Color {
 
     } else if found_intersect {
 
-        let mut c = get_ray_color(hit.scatter(), spheres, depth - 1);
-        c.r *= hit.sphere.material.albedo.r;
-        c.g *= hit.sphere.material.albedo.g;
-        c.b *= hit.sphere.material.albedo.b;
-        c
+        let ray_color = get_ray_color(hit.scatter(), spheres, depth - 1);
+        let mut mat_color = hit.sphere.material.albedo;
+        mat_color.r *= ray_color.r;
+        mat_color.g *= ray_color.g;
+        mat_color.b *= ray_color.b;
+        mat_color
 
     } else {
+
         let s = 0.5 * (1.0 + ray.direction.unit().y);
         let c1 = Color::new(0.5, 0.7, 1.0) * s;
         let c2 = Color::new(1.0, 1.0, 1.0) * (1.0 - s);
         c1 + c2
+
     }
 }
     
@@ -65,23 +68,23 @@ fn main() {
     let position = Point3::new(0.0, 0.0, 0.0);
     let cam = Camera::new(image_height, aspect_ratio, position, 1.0, 2.0);
 
-    let ground_mat = Material::new(Color::new(0.8, 0.8, 0.0), None);
+    let ground_mat = Material::new(Color::new(0.8, 0.8, 0.0), None, None);
     let ground = Sphere::new(Point3::new(0.0, -100.5, -1.0), 100.0, ground_mat);
 
-    let center_mat = Material::new(Color::new(0.7, 0.3, 0.3), None);
+    let center_mat = Material::new(Color::new(1.0, 1.0, 1.0), None, Some(1.5));
     let center = Sphere::new(Point3::new(0.0, 0.0, -1.0), 0.5, center_mat);
 
-    let left_mat = Material::new(Color::new(0.8, 0.8, 0.8), Some(0.3));
+    let left_mat = Material::new(Color::new(0.8, 0.8, 0.8), Some(0.3), None);
     let left = Sphere::new(Point3::new(-1.0, 0.0, -1.0), 0.5, left_mat);
 
-    let right_mat = Material::new(Color::new(0.8, 0.6, 0.2), Some(1.0));
+    let right_mat = Material::new(Color::new(0.8, 0.6, 0.2), Some(1.0), None);
     let right = Sphere::new(Point3::new(1.0, 0.0, -1.0), 0.5, right_mat);
     
     let spheres = vec![ground, center, left, right];
 
     let mut rng = rand::thread_rng();
     let samples_per_pixel = 100;
-    let max_bounce_depth = 100;
+    let max_bounce_depth = 50;
 
     println!("P3");
     println!("{} {}", cam.image_width, cam.image_height);
