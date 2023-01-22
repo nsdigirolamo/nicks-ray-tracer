@@ -1,3 +1,4 @@
+use crate::ray::Ray;
 use crate::vector3::Point3;
 
 #[derive(Default, Clone, Copy)]
@@ -28,5 +29,12 @@ impl Camera {
         c.bottom_left_corner.y -= c.view_height / 2.0;
         c.bottom_left_corner.z -= c.focal_length;
         c
+    }
+
+    pub fn get_ray(&self, width_ratio: f64, height_ratio: f64) -> Ray {
+        let mut direction = self.bottom_left_corner;
+        direction.x += self.view_width * width_ratio;
+        direction.y += self.view_height * height_ratio;
+        Ray::new(self.position, direction)
     }
 }
