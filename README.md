@@ -11,5 +11,10 @@ example outputs so far.
     <img src="https://i.imgur.com/jj2K9NV.png"/>
     <img src="https://i.imgur.com/hnKXifY.png"/>
     <img src="https://i.imgur.com/AvZDz5O.png"/>
-    <img src="https://i.imgur.com/jR4DgDK.png"/>
+    <p>
+        The below image is 1920x1080, 1000 samples per pixel, and max bounce depth 
+        of 500. There is no multi-threading or anything like that so it took 2 hours
+        and 13 minutes to render on my AMD Ryzen 3600 @ 3.6 GHz.
+    </p>
+    <img src="https://i.imgur.com/7AWGebu.png"/>
 </center>
