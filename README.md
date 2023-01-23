@@ -1,4 +1,4 @@
-# Nick's Rust Ray Tracer
+# Nick's Ray Tracer
 
 A ray tracer written in Rust following the [Ray Tracing in One Weekend](https://raytracing.github.io/) book series. This is a follow-up to my [previous attempt](https://github.com/nsdigirolamo/ray-tracing-in-one-weekend) where I did the
 same exact thing but it was written in C instead.
