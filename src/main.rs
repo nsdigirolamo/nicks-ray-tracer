@@ -135,8 +135,8 @@ fn main() {
         }
     }
 
-    let samples_per_pixel = 500;
-    let max_bounce_depth = 100;
+    let samples_per_pixel = 1000;
+    let max_bounce_depth = 500;
 
     println!("P3");
     println!("{} {}", image_width, image_height);
@@ -150,8 +150,8 @@ fn main() {
 
             for _sample in 0..samples_per_pixel {
                 
-                let rand_w: f64 = rng.gen_range(-1.0..1.0);
-                let rand_h: f64 = rng.gen_range(-1.0..1.0);
+                let rand_w: f64 = rng.gen_range(-0.5..0.5);
+                let rand_h: f64 = rng.gen_range(-0.5..0.5);
                 let w = (col as f64 + rand_w) / image_width as f64;
                 let h = (row as f64 + rand_h) / image_height as f64;
                 
