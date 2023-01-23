@@ -10,32 +10,71 @@ use std::ops::Neg;
 use std::ops::Sub;
 use std::ops::SubAssign;
 
+/// Represents a 3D vector.
 #[derive(Default, Clone, Copy)]
 pub struct Vector3 {
+    /// The vector's x dimension.
     pub x: f64,
+    /// The vector's y dimension.
     pub y: f64,
+    /// The vector's z dimension.
     pub z: f64,
 }
 
+/// Represents a point in 3D space.
 pub type Point3 = Vector3;
 
 impl Vector3 {
+    
+    ///
+    /// Returns a Vector3 with the given arguments.
+    ///
+    /// # Arguments
+    /// `x` - The vector's x dimension.
+    /// `y` - The vector's y dimension.
+    /// `z` - The vector's z dimension.
+    ///
     pub fn new(x: f64, y: f64, z: f64) -> Self {
         Self { x: x, y: y, z: z, }
     }
 
+    ///
+    /// Returns the vector's magnitude squred as an f64.
+    ///
+    /// # Arguments
+    /// * `&self` - The vector.
+    ///
     pub fn mag_squared(&self) -> f64 {
         (self.x * self.x) + (self.y * self.y) + (self.z * self.z)
     }
 
+    ///
+    /// Returns the vector's magnitude as an f64.
+    ///
+    /// # Arguments
+    /// * `&self` - The vector.
+    ///
     pub fn mag(&self) -> f64 {
         self.mag_squared().sqrt()
     }
 
+    ///
+    /// Returns the vector's unit vector as a Vector3.
+    ///
+    /// # Arguments
+    /// * `&self` - The vector.
+    ///
     pub fn unit(&self) -> Self {
         *self / self.mag()
     }
 
+    ///
+    /// Returns the cross product between two vectors as a Vector3.
+    ///
+    /// # Arguments
+    /// * `&self` - The vector on the left side of the operation.
+    /// * `rhs` - The vector on the right side of the operation.
+    ///
     pub fn cross(&self, rhs: Self) -> Self {
         Self {
             x: (self.y * rhs.z) - (self.z * rhs.y),
@@ -44,20 +83,48 @@ impl Vector3 {
         }
     }
 
+    ///
+    /// Returns the dot product between two vectors as a Vector3.
+    ///
+    /// # Arguments
+    /// * `&self` - The vector on the left side of the operation.
+    /// * `rhs` - The vector on the right side of the operation.
+    ///
     pub fn dot(&self, rhs: Self) -> f64 {
         (self.x * rhs.x) + (self.y * rhs.y) + (self.z * rhs.z)
     }
 
+    ///
+    /// Returns true if a vector is near zero.
+    ///
+    /// # Arguments
+    /// `&self` - The vector.
+    ///
     pub fn near_zero(&self) -> bool {
         let s = 1e-8;
         self.x.abs() < s && self.y.abs() < s && self.z.abs() < s
     }
 
+    /// 
+    /// Returns the reflection of a vector off the given normal as a Vector3.
+    ///
+    /// # Arguments
+    /// `&self` - The vector being reflected.
+    /// `normal` - The normal the vector is reflected off.
+    ///
     pub fn reflect(&self, normal: Vector3) -> Vector3 {
         let unit_normal = normal.unit();
         *self - 2.0 * self.dot(unit_normal) * unit_normal
     }
 
+    ///
+    /// Returns the refraction of a vector off the given normal as a Vector3.
+    ///
+    /// # Arguments
+    /// `&self` - The vector being refracted.
+    /// `normal` - The normal the vector is refracted off.
+    /// `refraction_index` - The refraction index of the material the vector is refracted through.
+    ///
     pub fn refract(&self, normal: Vector3, refraction_index: f64) -> Vector3 {
         let cos_theta = (-*self).dot(normal).min(1.0);
         let r_out_perp = refraction_index * (*self + cos_theta * normal);
@@ -66,6 +133,9 @@ impl Vector3 {
     }
 }
 
+///
+/// Returns a random Vector3 within the unit sphere.
+///
 pub fn rand_vector3() -> Vector3 {
     let mut rng = rand::thread_rng();
     
@@ -79,6 +149,9 @@ pub fn rand_vector3() -> Vector3 {
     if 1.0 <= v.mag() { rand_vector3() } else { v }
 }
 
+///
+/// Returns a random Vector3 within the unit disk. The z field is always zero.
+///
 pub fn rand_vector2() -> Vector3 {
     let mut rng = rand::thread_rng();
 

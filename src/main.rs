@@ -17,6 +17,16 @@ use crate::vector3::Vector3;
 
 use rand::Rng;
 
+///
+/// Returns the Color of a ray. Checks to see if the given ray intersects with
+/// any of the given spheres, and will recursively call itself to continue coloring
+/// the ray until it hits the depth limit.
+///
+/// # Arguments
+/// `ray` - The ray to be colored.
+/// `spheres` - The spheres the ray could possibly intersect with.
+/// `depth` - The maximum number of times recursion can occur.
+///
 fn get_ray_color(ray: Ray, spheres: &Vec<Sphere>, depth: i32) -> Color {
 
     let min_distance = 0.001;

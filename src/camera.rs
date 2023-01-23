@@ -5,23 +5,44 @@ use crate::vector3::Vector3;
 
 use std::f64::consts::PI;
 
+/// Represents the camera used to capture a rendered image.
 #[derive(Default, Clone, Copy)]
 pub struct Camera {
+    /// The position of the camera.
     origin: Point3,
-    horizontal: Vector3,
-    vertical: Vector3,
+    /// The point representing the horizontal border of the camera's view.
+    horizontal: Point3,
+    /// The point representing the vertical border of the camera's view.
+    vertical: Point3,
+    /// The relative lower left corner of the camera's view.
     lower_left_corner: Point3,
+    /// The direction the camera is facing.
     view_direction: Vector3,
+    /// The vertical vector orthogonal to the view direction.
     view_vertical: Vector3,
+    /// The horizontal vector orthogonal to the view direction.
     view_horizontal: Vector3,
+    /// The radius of the camera's lens.
     lens_radius: f64,
 }
 
 impl Camera {
+
+    ///
+    /// Returns a Camera with fields constructed from the given arguments.
+    ///
+    /// # Arguments
+    /// * `look_from` - The camera's location in space.
+    /// * `look_at` - The point in space the camera will be looking to.
+    /// * `up` - The camera's vertical up direction.
+    /// * `vfov_degrees` - The camera's vertical field of view in degrees.
+    /// * `aperature` - The camera's aperature diameter.
+    /// * `focus_distance` - The distance from the camera where the image will be in focus.
+    ///
     pub fn new(
 
-        look_from: Vector3, 
-        look_at: Vector3, 
+        look_from: Point3, 
+        look_at: Point3, 
         up: Vector3, 
         vfov_degrees: f64, 
         aspect_ratio: f64,
@@ -55,6 +76,14 @@ impl Camera {
         }  
     }
 
+    ///
+    /// Returns a Ray through the camera's view at the given width and height.
+    ///
+    /// # Arguments
+    /// `&self` - The camera that the ray is originating from.
+    /// `width_ratio` - How far horizontally the ray is applied to the image.
+    /// `height_ratio` - How far vertically the ray is applied to the image.
+    ///
     pub fn get_ray(&self, width_ratio: f64, height_ratio: f64) -> Ray {
 
         let rd = self.lens_radius * rand_vector2();

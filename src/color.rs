@@ -33,18 +33,40 @@ pub const _LIGHT_YELLOW: Color = Color { r: 1.0, g: 1.0, b: 0.5, };
 pub const _LIGHT_CYAN: Color = Color { r: 0.5, g: 1.0, b: 1.0, };
 pub const _LIGHT_PINK: Color = Color { r: 1.0, g: 0.5, b: 1.0, };
 
+/// Represents an RGB color.
 #[derive(Default, Clone, Copy)]
 pub struct Color {
+    /// The color's red value.
     pub r: f64,
+    /// The color's green value.
     pub g: f64,
+    /// The color's blue value.
     pub b: f64,
 }
 
 impl Color {
+    
+    ///
+    /// Returns a Color with the given red, green, and blue values. These values
+    /// should be a float in the range [0.0, 1.0] but the constructor does not
+    /// enforce that range. If the values are not within the range, the display
+    /// output will not be a valid RGB value.
+    ///
+    /// # Arguments
+    /// * `r` - The color's red value.
+    /// * `g` - The color's green value.
+    /// * `b` - The color's blue value.
+    ///
     pub fn new(r: f64, g: f64, b: f64) -> Self {
         Self { r: r, g: g, b: b, }
     }
 
+    ///
+    /// Gamma corrects the given color.
+    ///
+    /// # Arguments
+    /// * `&mut self` - The color to be gamma corrected.
+    ///
     pub fn gamma_correct(&mut self) {
         *self = Self {
             r: self.r.sqrt(),
