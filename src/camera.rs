@@ -31,7 +31,7 @@ impl Camera {
     ) -> Self {
 
         let theta = vfov_degrees * (PI / 180.0);
-        let view_height = (theta / 2.0).tan();
+        let view_height = 2.0 * (theta / 2.0).tan();
         let view_width = aspect_ratio * view_height;
 
         let view_direction = (look_from - look_at).unit();
