@@ -8,6 +8,31 @@ use std::ops::MulAssign;
 use std::ops::Sub;
 use std::ops::SubAssign;
 
+pub const _WHITE: Color = Color { r: 1.0, g: 1.0, b: 1.0, };
+pub const _BLACK: Color = Color { r: 0.0, g: 0.0, b: 0.0, };
+pub const _GREY: Color = Color { r: 0.5, g: 0.5, b: 0.5, };
+
+pub const _RED: Color = Color { r: 1.0, g: 0.0, b: 0.0, };
+pub const _GREEN: Color = Color { r: 0.0, g: 1.0, b: 0.0, };
+pub const _BLUE: Color = Color { r: 0.0, g: 0.0, b: 1.0, };
+pub const _YELLOW: Color = Color { r: 1.0, g: 1.0, b: 0.0, };
+pub const _CYAN: Color = Color { r: 0.0, g: 1.0, b: 1.0, };
+pub const _PINK: Color = Color { r: 1.0, g: 0.0, b: 1.0, };
+
+pub const _DARK_RED: Color = Color { r: 0.5, g: 0.0, b: 0.0, };
+pub const _DARK_GREEN: Color = Color { r: 0.0, g: 0.5, b: 0.0, };
+pub const _DARK_BLUE: Color = Color { r: 0.0, g: 0.0, b: 0.5, };
+pub const _DARK_YELLOW: Color = Color { r: 0.5, g: 0.5, b: 0.0, };
+pub const _DARK_CYAN: Color = Color { r: 0.0, g: 0.5, b: 0.5, };
+pub const _DARK_PINK: Color = Color { r: 0.5, g: 0.0, b: 0.5, };
+
+pub const _LIGHT_RED: Color = Color { r: 1.0, g: 0.5, b: 0.5, };
+pub const _LIGHT_GREEN: Color = Color { r: 0.5, g: 1.0, b: 0.5, };
+pub const _LIGHT_BLUE: Color = Color { r: 0.5, g: 0.5, b: 1.0, };
+pub const _LIGHT_YELLOW: Color = Color { r: 1.0, g: 1.0, b: 0.5, };
+pub const _LIGHT_CYAN: Color = Color { r: 0.5, g: 1.0, b: 1.0, };
+pub const _LIGHT_PINK: Color = Color { r: 1.0, g: 0.5, b: 1.0, };
+
 #[derive(Default, Clone, Copy)]
 pub struct Color {
     pub r: f64,
