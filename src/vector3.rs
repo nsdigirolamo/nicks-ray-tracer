@@ -75,8 +75,21 @@ pub fn rand_vector3() -> Vector3 {
         rng.gen_range(-1.0..1.0)
     );
 
-    // Make sure random vector is within unit sphere.
+    // Make sure random vector is within the unit sphere.
     if 1.0 <= v.mag() { rand_vector3() } else { v }
+}
+
+pub fn rand_vector2() -> Vector3 {
+    let mut rng = rand::thread_rng();
+
+    let v = Vector3::new(
+        rng.gen_range(-1.0..1.0),
+        rng.gen_range(-1.0..1.0),
+        0.0,
+    );
+
+    // Make sure random vector is within the unit disk.
+    if 1.0 <= v.mag() { rand_vector2() } else { v }
 }
 
 impl Add for Vector3 {
