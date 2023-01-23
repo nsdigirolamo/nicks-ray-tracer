@@ -69,11 +69,13 @@ fn main() {
     let image_width = (image_height as f64 * aspect_ratio) as i32;
     let vfov = 60.0;
 
-    let look_from = Vector3::new(-2.0, 2.0, 1.0);
+    let look_from = Vector3::new(3.0, 3.0, 2.0);
     let look_to = Vector3::new(0.0, 0.0, -1.0);
     let up = Vector3::new(0.0, 1.0, 0.0);
+    let dist_to_focus = (look_from - look_to).mag();
+    let aperature = 2.0;
     
-    let cam = Camera::new(look_from, look_to, up, vfov, aspect_ratio);
+    let cam = Camera::new(look_from, look_to, up, vfov, aspect_ratio, aperature, dist_to_focus);
 
     let ground_mat = Material::new(Color::new(0.8, 0.8, 0.0), None, None);
     let ground = Sphere::new(Point3::new(0.0, -100.5, -1.0), 100.0, ground_mat);
