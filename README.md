@@ -8,10 +8,10 @@ even do some more stuff like making it multithreaded or something. Below are som
 example outputs so far.
 
 <p align="center" float="left">
-    <img src="https://i1.lensdump.com/i/RGitao.png" width="40%"/>
-    <img src="https://i3.lensdump.com/i/RGirMi.png" width="40%"/>
-    <img src="https://i1.lensdump.com/i/RGigdm.png" width="40%"/>
-    <img src="https://i.lensdump.com/i/RGi0PZ.png" width="40%"/>
+    <img src="https://i1.lensdump.com/i/RGitao.png" width="45%"/>
+    <img src="https://i3.lensdump.com/i/RGirMi.png" width="45%"/>
+    <img src="https://i1.lensdump.com/i/RGigdm.png" width="45%"/>
+    <img src="https://i.lensdump.com/i/RGi0PZ.png" width="45%"/>
 </p>
 
 <p>
@@ -22,7 +22,7 @@ example outputs so far.
 </p>
 
 <p align="center">
-    <img src="https://i2.lensdump.com/i/RGij4K.png"/> 
+    <img src="https://i2.lensdump.com/i/RGij4K.png" width="90%"/> 
 </p>
 
 
