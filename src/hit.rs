@@ -1,5 +1,5 @@
+use crate::hittable::sphere::Sphere;
 use crate::ray::Ray;
-use crate::sphere::Sphere;
 use crate::vector3::Point3;
 use crate::vector3::rand_vector3;
 use crate::vector3::Vector3;

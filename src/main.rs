@@ -3,15 +3,16 @@ mod color;
 mod hit;
 mod material;
 mod ray;
-mod sphere;
+mod hittable;
 mod vector3;
 
 use crate::camera::Camera;
 use crate::color::*;
 use crate::hit::Hit;
+use crate::hittable::Hittable;
+use crate::hittable::sphere::Sphere;
 use crate::material::Material;
 use crate::ray::Ray;
-use crate::sphere::Sphere;
 use crate::vector3::Point3;
 use crate::vector3::Vector3;
 
@@ -27,7 +28,7 @@ use rand::Rng;
 /// `spheres` - The spheres the ray could possibly intersect with.
 /// `depth` - The maximum number of times recursion can occur.
 ///
-fn get_ray_color(ray: Ray, spheres: &Vec<Sphere>, depth: i32) -> Color {
+fn get_ray_color(ray: Ray, hittables: &Vec<Box<dyn Hittable>>, depth: i32) -> Color {
 
     let min_distance = 0.001;
     let max_distance = 1000.0;
@@ -36,8 +37,8 @@ fn get_ray_color(ray: Ray, spheres: &Vec<Sphere>, depth: i32) -> Color {
     let mut min_intersect_distance = max_distance;
     let mut hit: Hit = Default::default();
 
-    for sphere in spheres {
-        match ray.get_intersect(&sphere, min_distance, max_distance) {
+    for hittable in hittables {
+        match hittable.get_intersect(ray, min_distance, max_distance) {
             Some(h) => {
                 if h.distance < min_intersect_distance {
                     min_intersect_distance = h.distance;
@@ -55,7 +56,7 @@ fn get_ray_color(ray: Ray, spheres: &Vec<Sphere>, depth: i32) -> Color {
 
     } else if found_intersect {
 
-        let ray_color = get_ray_color(hit.scatter(), spheres, depth - 1);
+        let ray_color = get_ray_color(hit.scatter(), hittables, depth - 1);
         let mut mat_color = hit.sphere.material.albedo;
         mat_color.r *= ray_color.r;
         mat_color.g *= ray_color.g;
@@ -87,25 +88,25 @@ fn main() {
     
     let cam = Camera::new(look_from, look_to, up, vfov, aspect_ratio, aperature, dist_to_focus);
 
-    let mut spheres = Vec::new();
+    let mut hittables: Vec<Box<dyn Hittable>> = Vec::new();
 
     let ground_mat = Material::new(_GREY, None, None);
     let ground = Sphere::new(Point3::new(0.0, -1000.0, -1.0), 1000.0, ground_mat);
-    spheres.push(ground);
+    hittables.push(Box::new(ground));
     
     let radius = 1.0;
 
     let left_mat = Material::new(_LIGHT_RED, None, None);
     let left = Sphere::new(Point3::new(-3.0, radius, 0.0), radius, left_mat);
-    spheres.push(left);
+    hittables.push(Box::new(left));
 
     let center_mat = Material::new(_WHITE, None, Some(1.5));
     let center = Sphere::new(Point3::new(0.0, radius, 0.0), radius, center_mat);
-    spheres.push(center);
+    hittables.push(Box::new(center));
 
     let right_mat = Material::new(_LIGHT_BLUE, Some(0.05), None);
     let right = Sphere::new(Point3::new(3.0, radius, 0.0), radius, right_mat);
-    spheres.push(right);
+    hittables.push(Box::new(right));
 
     let mut rng = rand::thread_rng();
 
@@ -130,13 +131,13 @@ fn main() {
             }
 
             let sphere = Sphere::new(center, radius, material);
-            spheres.push(sphere);
+            hittables.push(Box::new(sphere));
 
         }
     }
 
-    let samples_per_pixel = 1000;
-    let max_bounce_depth = 500;
+    let samples_per_pixel = 10;
+    let max_bounce_depth = 10;
 
     println!("P3");
     println!("{} {}", image_width, image_height);
@@ -156,7 +157,7 @@ fn main() {
                 let h = (row as f64 + rand_h) / image_height as f64;
                 
                 let ray = cam.get_ray(w, h);
-                pixel_color += get_ray_color(ray, &spheres, max_bounce_depth);
+                pixel_color += get_ray_color(ray, &hittables, max_bounce_depth);
             }
 
             pixel_color /= samples_per_pixel as f64;
