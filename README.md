@@ -25,4 +25,9 @@ example outputs so far.
     <img src="https://i2.lensdump.com/i/RGij4K.png" width="90%"/> 
 </p>
 
+<p>
+    I am not going to implement motion blur because I don't think it looks very good and I'm just not interested in it. I am also not going to implement bounding volume hierarchies (for the time being) because they use pointers and I am not a good enough Rust developer
+    to figure out how to get Rust to work nicely with pointers. I understand conceptually how the C++ code from the book works and that's enough for me to carry on without actually implementing it.
+</p>
+
 
