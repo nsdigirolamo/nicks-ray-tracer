@@ -17,6 +17,10 @@ The below image is 1920x1080, 1000 samples per pixel, and max bounce depth of 50
     <img src="https://i2.lensdump.com/i/RGij4K.png" width="90%"/> 
 </p>
 
-I am not going to implement motion blur because I don't think it looks very good and it doesn't interest me. 
+Below is a very similar image. 1920x1080, 1000 samples per pixel, and max bounce depth of 500. This one was rendered after I added axis-aligned bounding boxes (AABBs) and bounding volume hierarchies (BVHs) to the ray tracer. It only took 44 minutes compared to the image above, which I'm pretty impressed by even if the images are *slightly* different.
 
-I am also not going to implement bounding volume hierarchies (for the time being) because they use pointers. I'm not a good enough Rust developer to figure out how to get Rust to work nicely with pointers. I understand conceptually how the C++ code from the book works. That's enough for me to carry on without actually implementing it.
+<p align="center">
+    <img src="https://i1.lensdump.com/i/TWzgpC.png" width="90%">
+</p>
+
+I think it's enough of a speed increase to say that the BVHs are clearly working, but I'm still not 100% sure I did everything correctly. The book provides a good example of a BVH node class, but doesn't really show how it's implemented with the rest of the program. Also, the C++ code uses a lot of pointers which Rust is picky about. I ended up using Rust's reference counted pointers to replace the C++ shared pointers because the Rc pointers gave me the multiple ownership I needed. Overall I'm still pretty happy with the result becuase at least its working!
