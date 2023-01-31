@@ -17,6 +17,6 @@ The below image is 1920x1080, 1000 samples per pixel, and max bounce depth of 50
     <img src="https://i2.lensdump.com/i/RGij4K.png" width="90%"/> 
 </p>
 
-I am not going to implement motion blur because I don't think it looks very good and I'm just not interested in it. 
+I am not going to implement motion blur because I don't think it looks very good and it doesn't interest me. 
 
 I am also not going to implement bounding volume hierarchies (for the time being) because they use pointers. I'm not a good enough Rust developer to figure out how to get Rust to work nicely with pointers. I understand conceptually how the C++ code from the book works. That's enough for me to carry on without actually implementing it.
