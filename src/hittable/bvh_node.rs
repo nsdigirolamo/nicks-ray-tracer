@@ -4,6 +4,7 @@ use crate::ray::Ray;
 
 use std::rc::Rc;
 
+
 /// Represents a node within a bounding volume hierarchy.
 pub struct BoundingVolumeHierarchyNode {
     /// This node's AABB.
@@ -27,6 +28,7 @@ impl BvhNode {
     /// * `left` - The BvhNode's left field.
     /// * `right` - The BvhNode's right field.
     ///
+    #[allow(dead_code)]
     pub fn new(bounding_box: AABB, left: Rc<dyn Hittable>, right: Rc<dyn Hittable>) -> Self {
         Self {
             bounding_box: bounding_box,
@@ -35,6 +37,55 @@ impl BvhNode {
         }
     }
 }
+
+/*
+pub fn construct_bvh(hittables: &mut Vec<Rc<dyn Hittable>>, start: usize, end: usize) -> Rc<dyn Hittable> {
+
+    let left: &Rc<dyn Hittable>;
+    let right: &Rc<dyn Hittable>;
+    let comparator = bounding_box_compare_x;
+    let hittables_span = end - start;
+
+    if hittables_span == 1 {
+
+        left = &hittables[start];
+        right = &hittables[start];
+
+    } else if hittables_span == 2 {
+        
+        if comparator(&hittables[start], &hittables[end - 1]) == Ordering::Less {
+            left = &hittables[start];
+            right = &hittables[end - 1];
+        } else {
+            left = &hittables[end - 1];
+            right = &hittables[start]
+        }
+
+    } else {
+        
+        hittables.sort_unstable_by(comparator);
+        let middle = start + (hittables_span / 2);
+
+        let left = construct_bvh(hittables, start, middle);
+        let right = construct_bvh(hittables, middle, end);
+        let bounding_box = surrounding_box(left.get_aabb(), right.get_aabb());
+        return Rc::new(BvhNode::new(bounding_box, &left, &right));
+    }
+
+    let bounding_box = surrounding_box(left.get_aabb(), right.get_aabb());
+    return Rc::new(BvhNode::new(bounding_box, left, right));
+}
+
+pub fn bounding_box_compare_x(h1: &Rc<dyn Hittable>, h2: &Rc<dyn Hittable>) -> Ordering {
+    if h1.get_aabb().min.x < h2.get_aabb().min.x {
+        Ordering::Less
+    } else if h1.get_aabb().max.x > h2.get_aabb().max.x {
+        Ordering::Greater
+    } else {
+        Ordering::Equal
+    }
+}
+*/
 
 impl Hittable for BvhNode {
 
