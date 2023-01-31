@@ -18,12 +18,13 @@ pub struct Sphere {
 impl Sphere {
 
     ///
-    /// Returns a Sphere with the given arguments.
+    /// Returns a Sphere constructed from the given arguments.
     ///
     /// # Arguments
-    /// * `center` - The sphere's center.
-    /// * `radius` - The sphere's radius.
-    /// * `material` - The sphere's material.
+    /// * `center` - The Sphere's center field.
+    /// * `radius` - The Sphere's radius field.
+    /// * `material` - The Sphere's material field.
+    ///
     pub fn new(center: Point3, radius: f64, material: Material) -> Self {
         Self {
             center: center,
@@ -34,6 +35,16 @@ impl Sphere {
 }
 
 impl Hittable for Sphere {
+
+    ///
+    /// Returns Some(Hit) if there is a Hit between the Sphere and a given Ray.
+    ///
+    /// # Arguments
+    /// * `&self` - The Sphere intersected by the Ray.
+    /// * `ray` - The intersecting Ray.
+    /// * `min_dist` - The minimum distance along the Ray to check for a Hit.
+    /// * `max_dist` - The maximum distance along the Ray to check for a Hit.
+    ///
     fn get_hit(&self, ray: Ray, min_dist: f64, max_dist: f64) -> Option<Hit> {
         let oc = ray.origin - self.center;
         let a = ray.direction.mag_squared();
