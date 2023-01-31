@@ -11,7 +11,7 @@ use std::ops::Sub;
 use std::ops::SubAssign;
 
 /// Represents a 3D vector.
-#[derive(Default, Clone, Copy)]
+#[derive(Debug, Default, Clone, Copy)]
 pub struct Vector3 {
     /// The vector's x dimension.
     pub x: f64,
