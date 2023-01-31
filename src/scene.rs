@@ -36,7 +36,7 @@ impl Scene {
         let mut hit: Hit = Default::default();
 
         for hittable in &self.hittables {
-            match hittable.get_intersect(ray, min_dist, max_dist) {
+            match hittable.get_hit(ray, min_dist, max_dist) {
                 Some(h) => {
                     if h.distance < min_intersect_distance {
                         min_intersect_distance = h.distance;

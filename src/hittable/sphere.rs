@@ -34,7 +34,7 @@ impl Sphere {
 }
 
 impl Hittable for Sphere {
-    fn get_intersect(&self, ray: Ray, min_dist: f64, max_dist: f64) -> Option<Hit> {
+    fn get_hit(&self, ray: Ray, min_dist: f64, max_dist: f64) -> Option<Hit> {
         let oc = ray.origin - self.center;
         let a = ray.direction.mag_squared();
         let half_b = oc.dot(ray.direction);
@@ -53,6 +53,12 @@ impl Hittable for Sphere {
             }
         }
 
-        Some(Hit::new(ray, *self, root))
+        let distance = root;
+        let point = ray.get_point(distance);
+        let mut normal = (point - self.center) / self.radius;
+        let is_front = ray.direction.dot(normal) < 0.0;
+        if !is_front { normal = -normal };
+
+        Some(Hit::new(ray, distance, normal, is_front, self.material))
     }
 }

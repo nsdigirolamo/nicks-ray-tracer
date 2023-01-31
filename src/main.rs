@@ -39,7 +39,7 @@ fn get_ray_color(ray: Ray, scene: &Scene, depth: i32) -> Color {
     match scene.get_intersect(ray, min_dist, max_dist) {
         Some(hit) => {
             let ray_color = get_ray_color(hit.scatter(), scene, depth - 1);
-            let mut mat_color = hit.sphere.material.albedo;
+            let mut mat_color = hit.material.albedo;
             mat_color.r *= ray_color.r;
             mat_color.g *= ray_color.g;
             mat_color.b *= ray_color.b;
