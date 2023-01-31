@@ -40,6 +40,7 @@ impl AABB {
 /// * `b1` - One of the surrounded AABBs.
 /// * `b2` - One of the surrounded AABBs.
 ///
+#[allow(dead_code)]
 pub fn surrounding_box(b1: AABB, b2: AABB) -> AABB {
     let min = Point3::new(
         b1.min.x.min(b2.min.x),
@@ -65,6 +66,7 @@ impl Hittable for AABB {
     /// * `min_dist` - The minimum distance along the Ray to check for a Hit.
     /// * `max_dist` - The maximum distance along the Ray to check for a Hit.
     ///
+    #[allow(unused_variables)]
     fn is_hit(&self, ray: Ray, min_dist: f64, max_dist: f64) -> bool {
 
         let inverse_x_direction = ray.direction.x;

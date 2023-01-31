@@ -18,6 +18,7 @@ pub trait Hittable {
     /// * `min_dist` - The minimum distance along the Ray to check for a Hit.
     /// * `max_dist` - The maximum distance along the Ray to check for a Hit.
     ///
+    #[allow(unused_variables)]
     fn get_hit(&self, ray: Ray, min_dist: f64, max_dist: f64) -> Option<Hit> {
         None
     }
