@@ -5,7 +5,7 @@ use crate::vector3::Point3;
 use std::mem::swap;
 
 /// Represents an axis-aligned bounding box in 3D space.
-#[derive(Default, Clone, Copy)]
+#[derive(Debug, Default, Clone, Copy)]
 pub struct AxisAlignedBoundingBox {
     /// The minimum corner of the bounding box.
     pub min: Point3,
@@ -40,7 +40,6 @@ impl AABB {
 /// * `b1` - One of the surrounded AABBs.
 /// * `b2` - One of the surrounded AABBs.
 ///
-#[allow(dead_code)]
 pub fn surrounding_box(b1: AABB, b2: AABB) -> AABB {
     let min = Point3::new(
         b1.min.x.min(b2.min.x),
@@ -69,17 +68,17 @@ impl Hittable for AABB {
     #[allow(unused_variables)]
     fn is_hit(&self, ray: Ray, min_dist: f64, max_dist: f64) -> bool {
 
-        let inverse_x_direction = ray.direction.x;
+        let inverse_x_direction = 1.0 / ray.direction.x;
         let mut x_min_dist = (self.min.x - ray.origin.x) * inverse_x_direction;
         let mut x_max_dist = (self.max.x - ray.origin.x) * inverse_x_direction;
         if inverse_x_direction < 0.0 { swap(&mut x_min_dist, &mut x_max_dist) }
 
-        let inverse_y_direction = ray.direction.y;
+        let inverse_y_direction = 1.0 / ray.direction.y;
         let mut y_min_dist = (self.min.y - ray.origin.y) * inverse_y_direction;
         let mut y_max_dist = (self.max.y - ray.origin.y) * inverse_y_direction;
         if inverse_y_direction < 0.0 { swap(&mut y_min_dist, &mut y_max_dist) }
 
-        let inverse_z_direction = ray.direction.z;
+        let inverse_z_direction = 1.0 / ray.direction.z;
         let mut z_min_dist = (self.min.z - ray.origin.z) * inverse_z_direction;
         let mut z_max_dist = (self.max.z - ray.origin.z) * inverse_z_direction;
         if inverse_z_direction < 0.0 { swap(&mut z_min_dist, &mut z_max_dist) }
