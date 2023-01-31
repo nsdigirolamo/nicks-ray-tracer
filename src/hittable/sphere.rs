@@ -1,8 +1,10 @@
 use crate::Hit;
+use crate::hittable::aabb::AABB;
 use crate::hittable::Hittable;
 use crate::material::Material;
 use crate::Ray;
 use crate::vector3::Point3;
+use crate::vector3::Vector3;
 
 /// Represents a sphere in 3D space.
 #[derive(Default, Clone, Copy)]
@@ -71,5 +73,16 @@ impl Hittable for Sphere {
         if !is_front { normal = -normal };
 
         Some(Hit::new(ray, distance, normal, is_front, self.material))
+    }
+
+    ///
+    /// Returns an AABB that surrounds the Sphere.
+    ///
+    /// # Arguments
+    /// * `&self` - The Sphere.
+    ///
+    fn get_aabb(&self) -> AABB {
+        let radius_vector = Vector3::new(self.radius, self.radius, self.radius);
+        AABB::new(self.center - radius_vector, self.center + radius_vector)
     }
 }

@@ -1,6 +1,8 @@
+pub mod aabb;
 pub mod sphere;
 
 use crate::Hit;
+use crate::hittable::aabb::AABB;
 use crate::Ray;
 
 /// Represents any object in 3D space that can be Hit by a Ray.
@@ -34,4 +36,12 @@ pub trait Hittable {
             None => false,
         }
     }
+
+    ///
+    /// Returns an AABB that surrounds the Hittable.
+    ///
+    /// # Arguments
+    /// * `&self` - The Hittable.
+    ///
+    fn get_aabb(&self) -> AABB;
 }
