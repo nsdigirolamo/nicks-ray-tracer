@@ -5,6 +5,7 @@ A ray tracer written in Rust following the [Ray Tracing in One Weekend](https://
 I'm hoping to complete all three books for this project, and afterwards I might even do some more stuff like making it multithreaded or something. Below are some example outputs so far.
 
 <p align="center" float="left">
+    <img src="https://i1.lensdump.com/i/RGitao.png" width="45%"/>
     <img src="https://i3.lensdump.com/i/RGirMi.png" width="45%"/>
     <img src="https://i1.lensdump.com/i/RGigdm.png" width="45%"/>
     <img src="https://i.lensdump.com/i/RGi0PZ.png" width="45%"/>
