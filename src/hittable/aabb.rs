@@ -33,6 +33,27 @@ impl AABB {
     }
 }
 
+///
+/// Returns an AABB that surrounds the two given AABBs.
+///
+/// # Arguments
+/// * `b1` - One of the surrounded AABBs.
+/// * `b2` - One of the surrounded AABBs.
+///
+pub fn surrounding_box(b1: AABB, b2: AABB) -> AABB {
+    let min = Point3::new(
+        b1.min.x.min(b2.min.x),
+        b1.min.y.min(b2.min.y),
+        b1.min.z.min(b2.min.z),
+    );
+    let max = Point3::new(
+        b1.max.x.max(b2.max.x),
+        b1.max.y.max(b2.max.y),
+        b1.max.z.max(b2.max.z),
+    );
+    AABB::new(min, max)
+}
+
 impl Hittable for AABB {
 
     ///
