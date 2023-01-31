@@ -8,9 +8,9 @@ use std::mem::swap;
 #[derive(Default, Clone, Copy)]
 pub struct AxisAlignedBoundingBox {
     /// The minimum corner of the bounding box.
-    min: Point3,
+    pub min: Point3,
     /// The maximum corner of the bounding box.
-    max: Point3,
+    pub max: Point3,
 }
 
 /// Acronym for AxisAlignedBoundingBox.
