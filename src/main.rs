@@ -18,6 +18,7 @@ use crate::vector3::Point3;
 use crate::vector3::Vector3;
 
 use rand::Rng;
+use std::rc::Rc;
 
 ///
 /// Returns the Color of a ray. Checks to see if the given ray intersects with
@@ -69,25 +70,24 @@ fn main() {
 
     let cam = Camera::new(look_from, look_to, up, vfov, aspect_ratio, aperature, dist_to_focus);
 
-    let mut scene = Scene::new();
-
     let ground_mat = Material::new(_GREY, None, None);
     let ground = Sphere::new(Point3::new(0.0, -1000.0, -1.0), 1000.0, ground_mat);
-    scene.hittables.push(Box::new(ground));
+
+    let mut scene = Scene::new(Rc::new(ground));
 
     let radius = 1.0;
 
     let left_mat = Material::new(_LIGHT_RED, None, None);
     let left = Sphere::new(Point3::new(-3.0, radius, 0.0), radius, left_mat);
-    scene.hittables.push(Box::new(left));
+    scene.push(Rc::new(left));
 
     let center_mat = Material::new(_WHITE, None, Some(1.5));
     let center = Sphere::new(Point3::new(0.0, radius, 0.0), radius, center_mat);
-    scene.hittables.push(Box::new(center));
+    scene.push(Rc::new(center));
 
     let right_mat = Material::new(_LIGHT_BLUE, Some(0.05), None);
     let right = Sphere::new(Point3::new(3.0, radius, 0.0), radius, right_mat);
-    scene.hittables.push(Box::new(right));
+    scene.push(Rc::new(right));
 
     let mut rng = rand::thread_rng();
 
@@ -112,13 +112,13 @@ fn main() {
             }
 
             let sphere = Sphere::new(center, radius, material);
-            scene.hittables.push(Box::new(sphere));
+            scene.push(Rc::new(sphere));
 
         }
     }
 
-    let samples_per_pixel = 10;
-    let max_bounce_depth = 10;
+    let samples_per_pixel = 1000;
+    let max_bounce_depth = 500;
 
     println!("P3");
     println!("{} {}", image_width, image_height);
@@ -127,7 +127,6 @@ fn main() {
     for row in (0..image_height).rev() {
         eprint!("\r{} scanlines remaining...      ", row);
         for col in 0..image_width {
-
             let mut pixel_color = Color::new(0.0, 0.0, 0.0);
 
             for _sample in 0..samples_per_pixel {
