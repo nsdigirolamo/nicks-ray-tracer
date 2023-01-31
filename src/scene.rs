@@ -1,23 +1,47 @@
 use crate::Hit;
 use crate::hittable::Hittable;
+use crate::hittable::bvh_node::BvhNode;
+use crate::hittable::bvh_node::construct_bvh_root;
 use crate::ray::Ray;
+
+use std::rc::Rc;
 
 /// Represents everything that could be seen in a rendered image.
 pub struct Scene {
     /// All hittable objects within a scene.
-    pub hittables: Vec<Box<dyn Hittable>>,
+    hittables: Vec<Rc<dyn Hittable>>,
+    /// The root node of this scene's bounding volume hierarchy.
+    bvh_root: BvhNode,
 }
 
 impl Scene {
-    
+
     ///
     /// Returns a Scene with the given arguments.
     ///
     /// # Arguments
     /// * `hittables` - All hittable objects within a scene.
     ///
-    pub fn new() -> Self {
-        Self { hittables: Vec::new() }
+    pub fn new(initial_hittable: Rc<dyn Hittable>) -> Self {
+
+        let mut hittables = vec![initial_hittable];
+        Self {
+            bvh_root: construct_bvh_root(&mut hittables, 0, 1),
+            hittables: hittables,
+        }
+    }
+
+    ///
+    /// Adds a Rc<dyn Hittable> to the Scene's hittables field.
+    ///
+    /// # Arguments
+    /// * `&mut self` - The Scene.
+    /// * `hittable` - The hittable to add.
+    ///
+    pub fn push(&mut self, hittable: Rc<dyn Hittable>) {
+        self.hittables.push(hittable);
+        let length = self.hittables.len();
+        self.bvh_root = construct_bvh_root(&mut self.hittables, 0, length);
     }
 
     ///
@@ -31,23 +55,8 @@ impl Scene {
     /// * `max_dist` - The maximum distance along the ray to look for an intersection.
     ///
     pub fn get_intersect(&self, ray: Ray, min_dist: f64, max_dist: f64) -> Option<Hit> {
-        let mut found_intersect = false;
-        let mut min_intersect_distance = max_dist;
-        let mut hit: Hit = Default::default();
 
-        for hittable in &self.hittables {
-            match hittable.get_hit(ray, min_dist, max_dist) {
-                Some(h) => {
-                    if h.distance < min_intersect_distance {
-                        min_intersect_distance = h.distance;
-                        found_intersect = true;
-                        hit = h;
-                    }
-                },
-                None => (),
-            }
-        }
+        self.bvh_root.get_hit(ray, min_dist, max_dist)
 
-        if found_intersect { Some(hit) } else { None }
     }
 }
