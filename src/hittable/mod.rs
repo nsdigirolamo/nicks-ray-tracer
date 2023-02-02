@@ -46,14 +46,4 @@ pub trait Hittable {
     /// * `&self` - The Hittable.
     ///
     fn get_aabb(&self) -> AABB;
-
-    ///
-    /// Returns a (f64, f64) tuple of the Hittable's (u, v) texture coordinates.
-    ///
-    /// # Arguments
-    /// * `&self` - The Hittable.
-    ///
-    fn get_uv(&self) -> Option<(f64, f64)> {
-        None
-    }
 }
