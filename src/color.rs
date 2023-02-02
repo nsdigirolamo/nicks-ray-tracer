@@ -34,7 +34,7 @@ pub const _LIGHT_CYAN: Color = Color { r: 0.5, g: 1.0, b: 1.0, };
 pub const _LIGHT_PINK: Color = Color { r: 1.0, g: 0.5, b: 1.0, };
 
 /// Represents an RGB color.
-#[derive(Default, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Color {
     /// The color's red value.
     pub r: f64,

@@ -5,7 +5,7 @@ use crate::vector3::Point3;
 use std::mem::swap;
 
 /// Represents an axis-aligned bounding box in 3D space.
-#[derive(Debug, Default, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct AxisAlignedBoundingBox {
     /// The minimum corner of the bounding box.
     pub min: Point3,

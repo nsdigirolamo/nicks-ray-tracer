@@ -6,7 +6,6 @@ use crate::vector3::Vector3;
 use std::f64::consts::PI;
 
 /// Represents the camera used to capture a rendered image.
-#[derive(Default, Clone, Copy)]
 #[allow(dead_code)]
 pub struct Camera {
     /// The position of the camera.

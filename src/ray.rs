@@ -2,7 +2,7 @@ use crate::vector3::Vector3;
 use crate::vector3::Point3;
 
 /// Represents a ray in 3D space.
-#[derive(Default, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Ray {
     /// The ray's origin.
     pub origin: Point3,
