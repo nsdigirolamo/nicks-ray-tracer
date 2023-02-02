@@ -73,6 +73,24 @@ impl Scene {
 ///
 pub fn construct_book1_final() -> Scene {
 
+    /*
+        Here are the camera args that were used for this scene, in case it needs
+        to be recreated exactly.
+
+        let aspect_ratio = 16.0 / 9.0;
+        let image_height = 1080;
+        let image_width = (image_height as f64 * aspect_ratio) as i32;
+        let vfov = 20.0;
+
+        let look_from = Vector3::new(13.0, 2.0, 4.0);
+        let look_to = Vector3::new(0.0, 0.5, 0.0);
+        let up = Vector3::new(0.0, 1.0, 0.0);
+        let dist_to_focus = 10.0;
+        let aperature = 0.1;
+
+        let cam = Camera::new(look_from, look_to, up, vfov, aspect_ratio, aperature, dist_to_focus);
+    */
+
     let ground_texture = Monochrome::new(_GREY);
     let ground_material = Material::new(Box::new(ground_texture), None, None);
     let ground = Sphere::new(Point3::new(0.0, -1000.0, -1.0), 1000.0, ground_material);
