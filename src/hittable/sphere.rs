@@ -6,6 +6,8 @@ use crate::Ray;
 use crate::vector3::Point3;
 use crate::vector3::Vector3;
 
+use std::f64::consts::PI;
+
 /// Represents a sphere in 3D space.
 pub struct Sphere {
     /// The sphere's center.
@@ -32,6 +34,22 @@ impl Sphere {
             radius: radius,
             material: material,
         }
+    }
+
+    ///
+    /// Returns a (f64, f64) tuple of the Sphere's (u, v) texture coordinates at
+    /// the given point.
+    ///
+    /// # Arguments
+    /// * `&self` - The Sphere.
+    /// * `point` - The point on the sphere's surface.
+    ///
+    fn get_uv(&self, point: Point3) -> (f64, f64) {
+        let theta = (-point.y).acos();
+        let phi = (-point.z).atan2(point.x) + PI;
+        let u = phi / (2.0 * phi);
+        let v = theta / PI;
+        (u, v)
     }
 }
 
@@ -76,7 +94,7 @@ impl Hittable for Sphere {
             distance, 
             normal, 
             is_front, 
-            self.material.texture.get_color(0.0, 0.0), 
+            self.material.texture.get_color(point, self.get_uv(point)), 
             self.material.reflectivity, 
             self.material.refraction_index,
         ))
