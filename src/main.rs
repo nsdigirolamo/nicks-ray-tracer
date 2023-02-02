@@ -11,12 +11,18 @@ mod vector3;
 use crate::camera::Camera;
 use crate::color::*;
 use crate::hit::Hit;
+use crate::hittable::sphere::Sphere;
+use crate::material::Material;
 use crate::ray::Ray;
 use crate::scene::Scene;
 use crate::scene::construct_book1_final;
+use crate::texture::checkered::Checkered;
+use crate::texture::monochrome::Monochrome;
+use crate::vector3::Point3;
 use crate::vector3::Vector3;
 
 use rand::Rng;
+use std::rc::Rc;
 
 ///
 /// Returns the Color of a ray. Checks to see if the given ray intersects with
@@ -60,18 +66,27 @@ fn main() {
     let image_width = (image_height as f64 * aspect_ratio) as i32;
     let vfov = 20.0;
 
-    let look_from = Vector3::new(13.0, 2.0, 4.0);
-    let look_to = Vector3::new(0.0, 0.5, 0.0);
+    let look_from = Vector3::new(13.0, 2.0, 3.0);
+    let look_to = Vector3::new(0.0, 0.0, 0.0);
     let up = Vector3::new(0.0, 1.0, 0.0);
     let dist_to_focus = 10.0;
-    let aperature = 0.1;
+    let aperature = 0.0;
 
     let cam = Camera::new(look_from, look_to, up, vfov, aspect_ratio, aperature, dist_to_focus);
 
-    let scene = construct_book1_final();
+    let bottom_texture = Checkered::new(Box::new(Monochrome::new(_GREY)), Box::new(Monochrome::new(_WHITE)), 0.25);
+    let bottom_material = Material::new(Box::new(bottom_texture), None, None);
+    let bottom = Sphere::new(Point3::new(0.0, -10.0, 0.0), 10.0, bottom_material);
 
-    let samples_per_pixel = 10;
-    let max_bounce_depth = 10;
+    let top_texture = Checkered::new(Box::new(Monochrome::new(_GREY)), Box::new(Monochrome::new(_WHITE)), 0.25);
+    let top_material = Material::new(Box::new(top_texture), None, None);
+    let top = Sphere::new(Point3::new(0.0, 10.0, 0.0), 10.0, top_material);
+
+    let mut scene = Scene::new(Rc::new(bottom));
+    scene.push(Rc::new(top));
+
+    let samples_per_pixel = 100;
+    let max_bounce_depth = 50;
 
     println!("P3");
     println!("{} {}", image_width, image_height);
