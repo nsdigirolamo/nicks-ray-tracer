@@ -7,7 +7,6 @@ use crate::vector3::Point3;
 use crate::vector3::Vector3;
 
 /// Represents a sphere in 3D space.
-#[derive(Default, Clone, Copy)]
 pub struct Sphere {
     /// The sphere's center.
     pub center: Point3,
@@ -72,7 +71,15 @@ impl Hittable for Sphere {
         let is_front = ray.direction.dot(normal) < 0.0;
         if !is_front { normal = -normal };
 
-        Some(Hit::new(ray, distance, normal, is_front, self.material))
+        Some(Hit::new(
+            ray, 
+            distance, 
+            normal, 
+            is_front, 
+            self.material.texture.get_color(0.0, 0.0), 
+            self.material.reflectivity, 
+            self.material.refraction_index,
+        ))
     }
 
     ///
