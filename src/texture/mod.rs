@@ -1,16 +1,18 @@
 pub mod monochrome;
+pub mod checkered;
 
 use crate::color::Color;
+use crate::vector3::Point3;
 
 pub trait Texture {
 
     ///
-    /// Returns the Color value for the texture at the given u, v coordinates.
+    /// Returns the Color value for the texture using the given arguments.
     ///
     /// # Arguments
     /// * `&self` - The texture.
-    /// * `u` - The texture's u coordinate.
-    /// * `v` - The texture's v coordinate.
+    /// * `point` - The point in space where the color exists.
+    /// * `uv` - The uv coordinates of the point on the texture.
     ///
-    fn get_color(&self, u: f64, v: f64) -> Color;
+    fn get_color(&self, point: Point3, uv: (f64, f64)) -> Color;
 }
