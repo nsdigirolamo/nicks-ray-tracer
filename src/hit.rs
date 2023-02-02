@@ -1,26 +1,26 @@
-use crate::material::Material;
+use crate::color::Color;
 use crate::ray::Ray;
-use crate::vector3::Point3;
 use crate::vector3::rand_vector3;
 use crate::vector3::Vector3;
 
 use rand::Rng;
 
 /// Represents the intersection between a Ray and a Hittable.
-#[derive(Default, Clone, Copy)]
 pub struct Hit {
     /// The Ray that intersects the Hittable.
     pub ray: Ray,
     /// The distance along the Ray where the intersection is located.
     pub distance: f64,
-    /// The position in space where the intersection is located.
-    pub point: Point3,
     /// The normal of the Hittable's surface.
     pub normal: Vector3,
     /// True if the Ray intersects the front of the Hittable's surface.
     pub is_front: bool,
-    /// The Material of the intersected Hittable.
-    pub material: Material,
+    /// The color of the Hittable at the intersection.
+    pub color: Color,
+    /// The reflectivity of the Hittable at the intersection.
+    pub reflectivity: Option<f64>,
+    /// The refraction index of the Hittable at the intersection.
+    pub refraction_index: Option<f64>,
 }
 
 impl Hit {
@@ -34,19 +34,21 @@ impl Hit {
     /// # Arguments
     /// * `ray` - The Hit's ray field.
     /// * `distance` - The Hit's distance field.
-    /// * `point` - The Hit's point field.
     /// * `normal` - The Hit's normal field.
     /// * `is_front` - The Hit's is_front field.
-    /// * `material` - The Hit's material field.
+    /// * `color` - The Hit's color field.
+    /// * `reflectivity` - The Hit's reflectivity field.
+    /// * `refraction_index` - The Hit's refrection_index field.
     ///
-    pub fn new(ray: Ray, distance: f64, normal: Vector3, is_front: bool, material: Material) -> Self {
+    pub fn new(ray: Ray, distance: f64, normal: Vector3, is_front: bool, color: Color, reflectivity: Option<f64>, refraction_index: Option<f64>) -> Self {
         Self {
             ray: ray,
             distance: distance,
-            point: ray.get_point(distance),
             normal: normal,
             is_front: is_front,
-            material: material,
+            color: color,
+            reflectivity: reflectivity,
+            refraction_index: refraction_index,
         }
     }
 
@@ -61,7 +63,7 @@ impl Hit {
         let mut direction = self.normal.unit() + rand_vector3().unit();
         if direction.near_zero() { direction = self.normal }
 
-        match self.material.reflectivity {
+        match self.reflectivity {
             Some(reflectivity) => {
                 let unit_direction = self.ray.direction.unit();
                 direction = unit_direction.reflect(self.normal);
@@ -70,7 +72,7 @@ impl Hit {
             None => ()
         }
 
-        match self.material.refraction_index {
+        match self.refraction_index {
             Some(ri) => {
 
                 let mut rng = rand::thread_rng();
@@ -92,7 +94,7 @@ impl Hit {
             None => ()
         }
 
-        Ray::new(self.point, direction) 
+        Ray::new(self.ray.get_point(self.distance), direction) 
     }
 }
 
