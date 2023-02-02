@@ -182,16 +182,14 @@ impl Hittable for BvhNode {
     fn get_hit(&self, ray: Ray, min_dist: f64, max_dist: f64) -> Option<Hit> {
 
         if !self.bounding_box.is_hit(ray, min_dist, max_dist) { return None; }
-        let mut is_hit = false;
-        let mut distance = max_dist;
-        let mut hit: Hit = Default::default();
+        let mut closest_distance = max_dist;
+        let mut hit: Option<Hit> = None;
 
         match self.left.get_hit(ray, min_dist, max_dist) {
             Some(h) => { 
-                if h.distance < distance {
-                    distance = h.distance;
-                    hit = h;
-                    is_hit = true;
+                if h.distance < closest_distance {
+                    closest_distance = h.distance;
+                    hit = Some(h);
                 }
             },
             None => (),
@@ -199,19 +197,15 @@ impl Hittable for BvhNode {
 
         match self.right.get_hit(ray, min_dist, max_dist) {
             Some(h) => { 
-                if h.distance < distance {
-                    hit = h;
-                    is_hit = true;
+                if h.distance < closest_distance {
+                    // closest_distance = h.distance;
+                    hit = Some(h);
                 } 
             },
             None => (),
         }
 
-        if is_hit {
-            Some(hit)
-        } else {
-            None
-        }
+        hit
     }
 
     ///
