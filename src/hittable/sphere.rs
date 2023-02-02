@@ -40,6 +40,9 @@ impl Sphere {
     /// Returns a (f64, f64) tuple of the Sphere's (u, v) texture coordinates at
     /// the given point.
     ///
+    /// u is an f64 between [0, 1] that is the angle around the y axis from x = -1
+    /// v is an f64 between [0, 1] that is the angle from y = -1 to y = 1
+    ///
     /// # Arguments
     /// * `&self` - The Sphere.
     /// * `point` - The point on the sphere's surface.
@@ -47,7 +50,7 @@ impl Sphere {
     fn get_uv(&self, point: Point3) -> (f64, f64) {
         let theta = (-point.y).acos();
         let phi = (-point.z).atan2(point.x) + PI;
-        let u = phi / (2.0 * phi);
+        let u = phi / (2.0 * PI);
         let v = theta / PI;
         (u, v)
     }
@@ -90,12 +93,12 @@ impl Hittable for Sphere {
         if !is_front { normal = -normal };
 
         Some(Hit::new(
-            ray, 
-            distance, 
-            normal, 
-            is_front, 
-            self.material.texture.get_color(point, self.get_uv(point)), 
-            self.material.reflectivity, 
+            ray,
+            distance,
+            normal,
+            is_front,
+            self.material.texture.get_color(point, self.get_uv(normal)),
+            self.material.reflectivity,
             self.material.refraction_index,
         ))
     }
