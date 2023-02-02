@@ -24,3 +24,10 @@ Below is a very similar image. 1920x1080, 1000 samples per pixel, and max bounce
 </p>
 
 I think it's enough of a speed increase to say that the BVHs are clearly working, but I'm still not 100% sure I did everything correctly. The book provides a good example of a BVH node class, but doesn't really show how it's implemented with the rest of the program. Also, the C++ code uses a lot of pointers which Rust is picky about. I ended up using Rust's reference counted pointers to replace the C++ shared pointers because the Rc pointers gave me the multiple ownership I needed. Overall I'm still pretty happy with the result becuase at least its working!
+
+Below are a few images of checkered spheres. I didn't like how the book's checkered pattern looked so I made my own. The left is an image straight from the book, and the right is my implementation. My pattern could be better because there's a lot of stretching going on at the poles, but I prefer it over the book's pattern.
+
+<p align="center" float="left">
+    <img src="https://i3.lensdump.com/i/TjL6Kk.png" width="45%"/>
+    <img src="https://i1.lensdump.com/i/TjL16M.png" width="45%"/>
+</p>
