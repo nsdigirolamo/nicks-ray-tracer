@@ -1,6 +1,5 @@
 use crate::color::Color;
 use crate::texture::Texture;
-use crate::vector3::Point3;
 
 use std::f64::consts::PI;
 
@@ -41,14 +40,14 @@ impl Texture for Checkered {
     /// * `&self` - The texture.
     /// * `point` - The point in space where the color exists.
     ///
-    fn get_color(&self, point: Point3, uv: (f64, f64)) -> Color {
+    fn get_color(&self, uv: (f64, f64)) -> Color {
         let scale = (1.0 / self.scale) * 20.0;
         let u = (uv.0 * (scale * PI)).sin();
         let v = (uv.1 * (scale * PI)).sin();
         if (u < 0.0 && 0.0 < v) || (0.0 < u && v < 0.0) {
-            self.texture1.get_color(point, uv)
+            self.texture1.get_color(uv)
         } else {
-            self.texture2.get_color(point, uv)
+            self.texture2.get_color(uv)
         }
     }
 }

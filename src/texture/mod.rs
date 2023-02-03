@@ -1,8 +1,8 @@
 pub mod monochrome;
 pub mod checkered;
+pub mod noisy;
 
 use crate::color::Color;
-use crate::vector3::Point3;
 
 pub trait Texture {
 
@@ -14,5 +14,5 @@ pub trait Texture {
     /// * `point` - The point in space where the color exists.
     /// * `uv` - The uv coordinates of the point on the texture.
     ///
-    fn get_color(&self, point: Point3, uv: (f64, f64)) -> Color;
+    fn get_color(&self, uv: (f64, f64)) -> Color;
 }

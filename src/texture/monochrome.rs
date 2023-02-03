@@ -1,6 +1,5 @@
 use crate::color::Color;
 use crate::texture::Texture;
-use crate::vector3::Point3;
 
 /// Represents a monochromatic texture.
 #[derive(Clone, Copy)]
@@ -35,7 +34,7 @@ impl Texture for Monochrome {
     /// * `uv` - The uv coordinates of the point on the texture.
     ///
     #[allow(unused_variables)]
-    fn get_color(&self, point: Point3, uv: (f64, f64)) -> Color {
+    fn get_color(&self, uv: (f64, f64)) -> Color {
         self.color
     }
 }
