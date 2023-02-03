@@ -4,6 +4,7 @@ use crate::vector3::rand_vector3;
 use crate::vector3::Vector3;
 
 use rand::Rng;
+use rand::rngs::ThreadRng;
 
 /// Represents the intersection between a Ray and a Hittable.
 pub struct Hit {
@@ -57,8 +58,9 @@ impl Hit {
     ///
     /// # Arguments
     /// * `&self` - The Hit.
+    /// * `rng` - An rng thread.
     ///
-    pub fn scatter(&self) -> Ray {
+    pub fn scatter(&self, rng: &ThreadRng) -> Ray {
 
         let mut direction = self.normal.unit() + rand_vector3().unit();
         if direction.near_zero() { direction = self.normal }

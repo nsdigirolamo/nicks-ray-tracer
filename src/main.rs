@@ -18,10 +18,13 @@ use crate::scene::Scene;
 use crate::scene::construct_book1_final;
 use crate::texture::checkered::Checkered;
 use crate::texture::monochrome::Monochrome;
+use crate::texture::noisy::Noisy;
 use crate::vector3::Point3;
 use crate::vector3::Vector3;
 
+use noise::Perlin;
 use rand::Rng;
+use rand::rngs::ThreadRng;
 use std::rc::Rc;
 
 ///
@@ -34,7 +37,7 @@ use std::rc::Rc;
 /// `spheres` - The spheres the ray could possibly intersect with.
 /// `depth` - The maximum number of times recursion can occur.
 ///
-fn get_ray_color(ray: Ray, scene: &Scene, depth: i32) -> Color {
+fn get_ray_color(ray: Ray, scene: &Scene, depth: i32, rng: &ThreadRng) -> Color {
 
     if depth <= 0 { return Color::new(0.0, 0.0, 0.0); }
     
@@ -43,7 +46,7 @@ fn get_ray_color(ray: Ray, scene: &Scene, depth: i32) -> Color {
 
     match scene.get_intersect(ray, min_dist, max_dist) {
         Some(hit) => {
-            let ray_color = get_ray_color(hit.scatter(), scene, depth - 1);
+            let ray_color = get_ray_color(hit.scatter(rng), scene, depth - 1, rng);
             let mut hit_color = hit.color;
             hit_color.r *= ray_color.r;
             hit_color.g *= ray_color.g;
@@ -74,11 +77,11 @@ fn main() {
 
     let cam = Camera::new(look_from, look_to, up, vfov, aspect_ratio, aperature, dist_to_focus);
 
-    let bottom_texture = Checkered::new(Box::new(Monochrome::new(_GREY)), Box::new(Monochrome::new(_WHITE)), 0.25);
+    let bottom_texture = Noisy::new(Perlin::new(04132001), 75.0, _LIGHT_RED);
     let bottom_material = Material::new(Box::new(bottom_texture), None, None);
     let bottom = Sphere::new(Point3::new(0.0, -10.0, 0.0), 10.0, bottom_material);
 
-    let top_texture = Checkered::new(Box::new(Monochrome::new(_GREY)), Box::new(Monochrome::new(_WHITE)), 0.25);
+    let top_texture = Noisy::new(Perlin::new(04132001), 75.0, _LIGHT_BLUE);
     let top_material = Material::new(Box::new(top_texture), None, None);
     let top = Sphere::new(Point3::new(0.0, 10.0, 0.0), 10.0, top_material);
 
@@ -107,7 +110,7 @@ fn main() {
                 let h = (row as f64 + rand_h) / image_height as f64;
 
                 let ray = cam.get_ray(w, h);
-                pixel_color += get_ray_color(ray, &scene, max_bounce_depth);
+                pixel_color += get_ray_color(ray, &scene, max_bounce_depth, &rng);
             }
 
             pixel_color /= samples_per_pixel as f64;
