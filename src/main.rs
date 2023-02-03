@@ -67,29 +67,39 @@ fn main() {
     let aspect_ratio = 16.0 / 9.0;
     let image_height = 1080;
     let image_width = (image_height as f64 * aspect_ratio) as i32;
-    let vfov = 20.0;
+    let vfov = 50.0;
 
-    let look_from = Vector3::new(13.0, 2.0, 3.0);
-    let look_to = Vector3::new(0.0, 0.0, 0.0);
+    let look_from = Vector3::new(0.0, 1.0, 5.0);
+    let look_to = Vector3::new(0.0, 1.0, 0.0);
     let up = Vector3::new(0.0, 1.0, 0.0);
-    let dist_to_focus = 10.0;
+    let dist_to_focus = 5.0;
     let aperature = 0.0;
 
     let cam = Camera::new(look_from, look_to, up, vfov, aspect_ratio, aperature, dist_to_focus);
 
-    let bottom_texture = Noisy::new(Perlin::new(04132001), 75.0, _LIGHT_RED);
-    let bottom_material = Material::new(Box::new(bottom_texture), None, None);
-    let bottom = Sphere::new(Point3::new(0.0, -10.0, 0.0), 10.0, bottom_material);
+    let texture1 = Noisy::new(Perlin::new(1), 10.0, 20, true, _LIGHT_BLUE);
+    let material1 = Material::new(Box::new(texture1), Some(0.0), None);
+    let sphere1 = Sphere::new(Point3::new(-2.1, 1.0, 0.0), 1.0, material1);
 
-    let top_texture = Noisy::new(Perlin::new(04132001), 75.0, _LIGHT_BLUE);
-    let top_material = Material::new(Box::new(top_texture), None, None);
-    let top = Sphere::new(Point3::new(0.0, 10.0, 0.0), 10.0, top_material);
+    let texture2 = Noisy::new(Perlin::new(2), 50.0, 10, false, _LIGHT_RED);
+    let material2 = Material::new(Box::new(texture2), None, None);
+    let sphere2 = Sphere::new(Point3::new(0.0, 1.0, 0.0), 1.0, material2);
 
-    let mut scene = Scene::new(Rc::new(bottom));
-    scene.push(Rc::new(top));
+    let texture3 = Noisy::new(Perlin::new(3), 10.0, 30, true, _LIGHT_GREEN);
+    let material3 = Material::new(Box::new(texture3), None, Some(1.5));
+    let sphere3 = Sphere::new(Point3::new(2.1, 1.0, 0.0), 1.0, material3);
 
-    let samples_per_pixel = 100;
-    let max_bounce_depth = 50;
+    let texture4 = Monochrome::new(_GREY);
+    let material4 = Material::new(Box::new(texture4), None, None);
+    let sphere4 = Sphere::new(Point3::new(0.0, -1000.0, 0.0), 1000.0, material4);
+
+    let mut scene = Scene::new(Rc::new(sphere1));
+    scene.push(Rc::new(sphere2));
+    scene.push(Rc::new(sphere3));
+    scene.push(Rc::new(sphere4));
+
+    let samples_per_pixel = 200;
+    let max_bounce_depth = 100;
 
     println!("P3");
     println!("{} {}", image_width, image_height);

@@ -3,31 +3,40 @@ use crate::texture::Texture;
 
 use noise::Perlin;
 use noise::NoiseFn;
+use std::f64::consts::PI;
 
 /// Represents a noisy texture.
 #[derive(Clone, Copy)]
 pub struct Noisy {
     /// The perlin noise.
     pub perlin: Perlin,
-    /// The perlin noise's scale.
+    /// The perlin noise's scale. Larger values create smaller details.
     pub scale: f64,
+    /// The number of times the perlin noise will be layered over itself.
+    pub layers: u32,
+    /// If the noise is turbulent.
+    pub is_turbulent: bool,
     /// The texture's color.
     pub color: Color,
 }
 
 impl Noisy {
-    
+
     ///
     /// Returns a noisy texture constructed from the given argument.
     ///
-    /// # Argument
-    /// * `seed` - The perlin noise's seed.
-    /// * `color` - The noisy texture's color.
+    /// # Arguments
+    /// * `perlin` - The texture's perlin field.
+    /// * `scale` - The texture's scale field.
+    /// * `layers` - The texture's layers field.
+    /// * `color` - The texture's color field.
     ///
-    pub fn new(perlin: Perlin, scale: f64, color: Color) -> Self {
+    pub fn new(perlin: Perlin, scale: f64, layers: u32, is_turbulent: bool, color: Color) -> Self {
         Self {
             perlin: perlin,
             scale: scale,
+            layers: layers,
+            is_turbulent: is_turbulent,
             color: color,
         }
     }
@@ -46,12 +55,24 @@ impl Texture for Noisy {
     #[allow(unused_variables)]
     fn get_color(&self, uv: (f64, f64)) -> Color {
 
-        let u = uv.0 * self.scale;
-        let v = uv.1 * self.scale;
+        let mut accum = 0.0;
+        let mut u = uv.0 * self.scale;
+        let mut v = uv.1 * self.scale;
+        let mut weight = 1.0;
 
-        let lower_limit = 0.5;
-        let upper_limit = lower_limit + 2.0;
-        let val = (self.perlin.get([u, v]) + (1.0 + lower_limit)) * (1.0 / upper_limit);
-        self.color * val
+        for level in 0..self.layers {
+            let mut noise: f64;
+            if self.is_turbulent {
+                noise = self.perlin.get([u, v]);
+            } else {
+                noise = (self.perlin.get([u, v]) + 1.0) * 0.5;
+            }
+            accum += weight * noise;
+            weight *= 0.5;
+            u *= 2.0;
+            v *= 2.0;
+        }
+
+        self.color * accum.abs()
     }
 }
