@@ -97,7 +97,7 @@ impl Hittable for Sphere {
             distance,
             normal,
             is_front,
-            self.material.texture.get_color(point, self.get_uv(normal)),
+            self.material.texture.get_color(self.get_uv(normal)),
             self.material.reflectivity,
             self.material.refraction_index,
         ))
